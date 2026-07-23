@@ -17,12 +17,13 @@ description: 访谈式生成个人体态矫正/健身训练计划，并自动部
 依次确认，缺什么就引导用户装什么，全部就绪才进入访谈：
 
 ```bash
-gh auth status   # GitHub CLI 已登录(需要 repo 权限)
-node --version   # Node.js 可用(跑校验器)
-git --version
+gh auth status        # GitHub CLI 已登录(需要 repo 权限)
+node --version        # Node.js 可用(跑校验器)
+git config user.name  # git 提交身份已配置
 ```
 
 - `gh` 未安装：macOS `brew install gh`，其他平台见 https://cli.github.com。未登录：`gh auth login`。
+- `git config user.name` 为空：提交会失败。引导用户 `git config --global user.name "名字"` + `git config --global user.email "邮箱"`，或之后提交时用 `git -c user.name=… -c user.email=…` 临时指定。
 - 顺便记下用户名：`gh api user --jq '.login'`。
 
 ## Phase 1 · 访谈
@@ -61,11 +62,13 @@ node scripts/validate-plan.js
 ## Phase 3 · 部署
 
 1. 问用户仓库名（默认 `my-training-plan`）。提醒：GitHub Pages 免费版要求**公开仓库**，训练计划内容会公开可见；介意的话可选私有仓库（需要 GitHub Pro 才能开 Pages）。
-2. 从模板建仓并克隆（建仓后模板文件复制是异步的，等几秒再 clone）：
+2. 从模板建仓并克隆：
 
 ```bash
 gh repo create <用户名>/<仓库名> --template Link2PM/healthy-app-template --public --clone
 ```
+
+   注意：模板文件复制是异步的。若克隆下来的目录是空的，删掉它等几秒后 `git clone` 重试。
 
 3. 用生成的 plan.js 覆盖仓库里的示例 plan.js，再跑一次校验，然后提交推送：
 

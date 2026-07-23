@@ -16,7 +16,7 @@
 git clone https://github.com/Link2PM/healthy-coach-skill.git ~/.claude/skills/healthy-coach
 ```
 
-新开一个 Claude Code 会话（skill 目录在会话启动时扫描），然后：
+然后在 Claude Code 里输入（若当前会话未识别该 skill，新开一个会话即可）：
 
 ```
 /healthy-coach
